@@ -21,7 +21,7 @@ class MarkovChain:
         for previous, current in zip(text[:-1], text[1:]):
             self.chains[previous][current] += 1
 
-    def most_likely_word(self, word: 'previous word', threshold=0.5) -> str:
+    def most_likely_word(self, word: 'previous word', threshold=0.25) -> str:
         """
         Get most likely word given previous word from Markov Chains.
 
@@ -67,7 +67,7 @@ class MarkovChain:
         :param path: source filename.
         """
         for line in open(path):
-            words = line.split("+++$+++ ")[-1].split(" ")
+            words = line.split(" ")
             cleaned = [w.replace(".", "").replace("\n", "").replace(" ", "") for w in words if w and w != ' ']
             self.learn(cleaned)
 
@@ -87,6 +87,6 @@ if __name__ == '__main__':
     print("Markov Chain N-Gram model. 2019 by Karol Oleszek")
     mc = MarkovChain()
     text_in = 'Semir dahak semir dahakian semir xd semir xd'.split(" ")
-    mc.learn_text_from_file('movie_lines.txt')
+    mc.learn_text_from_file('out.txt')
     print(mc.generate_text(5))
     mc.converse()
