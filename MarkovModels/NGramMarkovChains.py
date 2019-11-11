@@ -35,16 +35,17 @@ class MarkovChain:
         most_frequent = list(filter((lambda w: self.chains[word][w] >= mx_count * threshold), self.chains[word].keys()))
         return random.choice(most_frequent)
 
-    def generate_sentence(self, starting_word='___', length=10):
+    def generate_sentence(self, starting_word='___', length=10, threshold=0.25):
         """
         Generate text from Markov Chains with given starting word and with given length.
+        :param threshold: word generation probability threshold.
         :param starting_word: starting state.
         :param length: result requested length.
         """
         result = []
         current_word = starting_word
         for x in range(length):
-            next_word = self.most_likely_word(current_word)
+            next_word = self.most_likely_word(current_word, threshold=threshold)
             result.append(next_word)
             current_word = next_word
         return " ".join(result).capitalize() + "."
@@ -71,6 +72,20 @@ class MarkovChain:
             cleaned = [w.replace(".", "").replace("\n", "").replace(" ", "") for w in words if w and w != ' ']
             self.learn(cleaned)
 
+    def self_converse(self):
+        """
+        Converse with itself.
+        """
+        in_ = '.'
+        speaker1 = True
+        while True:
+            in_ = self.generate_sentence(starting_word=random.choice(in_.split(" ")),
+                                         length=random.randrange(2, 20),
+                                         threshold=random.random())
+            speaker = 'Semir' if speaker1 else 'Dahak'
+            print("{0}: {1}".format(speaker, in_))
+            speaker1 = not speaker1
+
     def converse(self):
         """
         Enter interactive conversation with Markov Chain model.
@@ -80,7 +95,8 @@ class MarkovChain:
             if in_ == 'Bye':
                 break
             else:
-                print(self.generate_sentence(starting_word=in_.split(" ")[-1], length=random.randrange(2, 20)))
+                print(self.generate_sentence(starting_word=random.choice(in_.split(" ")),
+                                             length=random.randrange(2, 20)))
 
 
 if __name__ == '__main__':
@@ -89,4 +105,4 @@ if __name__ == '__main__':
     text_in = 'Semir dahak semir dahakian semir xd semir xd'.split(" ")
     mc.learn_text_from_file('out.txt')
     print(mc.generate_text(5))
-    mc.converse()
+    mc.self_converse()
