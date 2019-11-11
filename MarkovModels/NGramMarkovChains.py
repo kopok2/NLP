@@ -95,14 +95,14 @@ class MarkovChain:
             if in_ == 'Bye':
                 break
             else:
-                print(self.generate_sentence(starting_word=random.choice(in_.split(" ")),
-                                             length=random.randrange(2, 20)))
+                print(self.generate_sentence(starting_word=in_.split(" ")[-1],
+                                             length=random.randrange(4, 20),
+                                             threshold=0.5))
 
 
 if __name__ == '__main__':
     print("Markov Chain N-Gram model. 2019 by Karol Oleszek")
     mc = MarkovChain()
-    text_in = 'Semir dahak semir dahakian semir xd semir xd'.split(" ")
     mc.learn_text_from_file('out.txt')
-    print(mc.generate_text(5))
-    mc.self_converse()
+    mode = input("Select mode(1 - interactive, 2 - self):")
+    mc.self_converse() if int(mode) == 2 else mc.converse()
