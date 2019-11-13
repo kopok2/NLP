@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+MarkovModels/mess2.json
+MarkovModels/mess.json
+MarkovModels/out_ko.txt

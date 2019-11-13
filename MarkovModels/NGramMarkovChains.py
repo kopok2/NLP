@@ -67,7 +67,7 @@ class MarkovChain:
 
         :param path: source filename.
         """
-        for line in open(path):
+        for line in open(path, encoding='utf-32'):
             words = line.split(" ")
             cleaned = [w.replace(".", "").replace("\n", "").replace(" ", "") for w in words if w and w != ' ']
             self.learn(cleaned)
@@ -81,7 +81,7 @@ class MarkovChain:
         while True:
             in_ = self.generate_sentence(starting_word=random.choice(in_.split(" ")),
                                          length=random.randrange(2, 20),
-                                         threshold=random.random())
+                                         threshold=0.2)
             speaker = 'Semir' if speaker1 else 'Dahak'
             print("{0}: {1}".format(speaker, in_))
             speaker1 = not speaker1
@@ -90,6 +90,7 @@ class MarkovChain:
         """
         Enter interactive conversation with Markov Chain model.
         """
+        print("Entering interactive mode...".center(64, '#'))
         while True:
             in_ = input()
             if in_ == 'Bye':
@@ -97,12 +98,14 @@ class MarkovChain:
             else:
                 print(self.generate_sentence(starting_word=in_.split(" ")[-1],
                                              length=random.randrange(4, 20),
-                                             threshold=0.5))
+                                             threshold=0.12))
 
 
 if __name__ == '__main__':
     print("Markov Chain N-Gram model. 2019 by Karol Oleszek")
+    print("#" * 64)
     mc = MarkovChain()
-    mc.learn_text_from_file('out.txt')
-    mode = input("Select mode(1 - interactive, 2 - self):")
-    mc.self_converse() if int(mode) == 2 else mc.converse()
+    mc.learn_text_from_file('out_ko.txt')
+    mode = int(input("Select mode(1 - interactive, 2 - self):"))
+    launch = {1: mc.converse, 2: mc.self_converse}
+    launch[mode]()
